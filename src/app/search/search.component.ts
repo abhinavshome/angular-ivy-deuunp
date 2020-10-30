@@ -1,5 +1,4 @@
-import { HttpClient } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, HostListener, OnInit } from "@angular/core";
 import { User } from "../user";
 import { UserService } from "../user.service";
 
@@ -12,8 +11,20 @@ export class SearchComponent implements OnInit {
   users: User[];
   results: any[] = [];
   highlighted = -1;
+  isOpen = false;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private elementRef: ElementRef
+  ) {}
+
+  @HostListener("document:mousedown", ["$event"])
+  onGlobalClick(event): void {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      // clicked outside => close dropdown list
+      this.isOpen = false;
+    }
+  }
 
   ngOnInit() {
     this.users = this.userService.getUsers();
@@ -28,19 +39,30 @@ export class SearchComponent implements OnInit {
       return;
     }
     this.users.forEach(user => {
+      const highlightRecord = Object.assign({}, user);
       Object.keys(this.users[0]).forEach(key => {
         if (key !== "items") {
-          if (user[key].indexOf(searchTerm) !== -1) {
+          const index = user[key].indexOf(searchTerm);
+          if (index !== -1) {
+            highlightRecord[key] =
+              highlightRecord[key].slice(0, index) +
+              "<span>" +
+              searchTerm +
+              "</span>" +
+              highlightRecord[key].slice(
+                index + searchTerm.length,
+                highlightRecord[key].length
+              );
             this.results.push({
               foundIn: key,
-              record: user
+              record: highlightRecord
             });
           }
         } else {
           if (user[key].find(u => u === searchTerm)) {
             this.results.push({
               foundIn: key,
-              record: user
+              record: highlightRecord
             });
           }
         }
@@ -48,19 +70,23 @@ export class SearchComponent implements OnInit {
     });
   }
 
-  highlight(res) {
-    res.highlighted = true;
+  highlight(i) {
+    this.highlighted = i;
   }
 
   highlightNext() {
-    console.log("kk");
+    if (this.highlighted < this.results.length - 1) {
+      this.highlighted++;
+    }
   }
 
   highlightPrev() {
-    console.log("kks");
+    if (this.highlighted > 0) {
+      this.highlighted--;
+    }
   }
 
-  unhighlight(res) {
-    res.highlighted = false;
+  unhighlight() {
+    this.highlighted = -1;
   }
 }

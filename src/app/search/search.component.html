@@ -1,14 +1,17 @@
-<input type="text" (keyup)="searchText(searchBox.value, $event)" (keyup.arrowup)="highlightPrev()" (keyup.arrowdown)="highlightNext()" #searchBox />
-<div class="results">
+<input type="text" (keyup)="searchText(searchBox.value, $event)" (keyup.arrowup)="highlightPrev()" (keyup.arrowdown)="highlightNext()"
+(focus)="isOpen=true"
+#searchBox />
+<div class="results" id="results" *ngIf="isOpen">
 	<div *ngIf="results.length === 0">
 		No results
 	</div>
-	<div *ngIf="results.length">
-		<div *ngFor="let res of results; let i=index;" (mouseover)="highlighted = i" (mouseout)="highlighted = -1"
-			[class.highlighted]="res.highlighted">
-			<div><b>{{res.record.id}}</b></div>
-			<div><i>{{res.record.name}}</i></div>
-			<div>{{res.record.address}}</div>
+	<div *ngIf="results.length" (click)="searchBox.focus()">
+		<div *ngFor="let res of results; let i=index;" (mouseover)="highlight(i)" (mouseout)="unhighlight()"
+			[class.highlighted]="highlighted === i" class="result">
+			<div><b [innerHTML]="res.record.id"></b></div>
+			<div><i [innerHTML]="res.record.name"></i></div>
+			<div [innerHTML]="res.record.address"></div>
+			<div [innerHTML]="res.record.pincode"></div>
 			<hr />
 		</div>
 	</div>
