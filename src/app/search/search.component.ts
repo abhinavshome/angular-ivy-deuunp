@@ -44,4 +44,12 @@ export class SearchComponent implements OnInit {
       });
     });
   }
+
+  highlight(res) {
+    res.highlighted = true;
+  }
+
+  unhighlight(res) {
+    res.highlighted = false;
+  }
 }

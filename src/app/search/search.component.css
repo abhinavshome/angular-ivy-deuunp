@@ -2,7 +2,11 @@
   position: absolute;
   border: 1px solid #eee;
   box-shadow: #ddd 2px 2px 2px;
-  max-height: 300px;
+  max-height: 200px;
   overflow: scroll;
   width: 200px;
+}
+
+.highlighted {
+  background-color: yellow;
 }

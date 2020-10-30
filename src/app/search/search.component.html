@@ -4,7 +4,8 @@
 		No results
 	</div>
 	<div *ngIf="results.length">
-		<div *ngFor="let res of results">
+		<div *ngFor="let res of results" (mouseover)="highlight(res)" (mouseout)="unhighlight(res)"
+			[class.highlighted]="res.highlighted">
 			<div><b>{{res.record.id}}</b></div>
 			<div><i>{{res.record.name}}</i></div>
 			<div>{{res.record.address}}</div>
