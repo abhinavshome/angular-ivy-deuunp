@@ -11,6 +11,7 @@ import { UserService } from "../user.service";
 export class SearchComponent implements OnInit {
   users: User[];
   results: any[] = [];
+  highlighted = -1;
 
   constructor(private userService: UserService) {}
 
@@ -18,7 +19,9 @@ export class SearchComponent implements OnInit {
     this.users = this.userService.getUsers();
   }
 
-  searchText(searchTerm) {
+  searchText(searchTerm, event) {
+    console.log(event.value);
+
     console.log(`Searching for ${searchTerm}`);
     this.results = [];
     if (searchTerm === "") {
@@ -47,6 +50,14 @@ export class SearchComponent implements OnInit {
 
   highlight(res) {
     res.highlighted = true;
+  }
+
+  highlightNext() {
+    console.log("kk");
+  }
+
+  highlightPrev() {
+    console.log("kks");
   }
 
   unhighlight(res) {

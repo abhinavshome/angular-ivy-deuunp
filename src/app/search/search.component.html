@@ -1,10 +1,10 @@
-<input type="text" (keyup)="searchText(searchBox.value)" #searchBox/>
+<input type="text" (keyup)="searchText(searchBox.value, $event)" (keyup.arrowup)="highlightPrev()" (keyup.arrowdown)="highlightNext()" #searchBox />
 <div class="results">
 	<div *ngIf="results.length === 0">
 		No results
 	</div>
 	<div *ngIf="results.length">
-		<div *ngFor="let res of results" (mouseover)="highlight(res)" (mouseout)="unhighlight(res)"
+		<div *ngFor="let res of results; let i=index;" (mouseover)="highlighted = i" (mouseout)="highlighted = -1"
 			[class.highlighted]="res.highlighted">
 			<div><b>{{res.record.id}}</b></div>
 			<div><i>{{res.record.name}}</i></div>
