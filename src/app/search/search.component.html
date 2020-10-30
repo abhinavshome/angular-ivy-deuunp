@@ -1,0 +1,14 @@
+<input type="text" (keyup)="searchText(searchBox.value)" #searchBox/>
+<div class="results">
+	<div *ngIf="results.length === 0">
+		No results
+	</div>
+	<div *ngIf="results.length">
+		<div *ngFor="let res of results">
+			<div><b>{{res.record.id}}</b></div>
+			<div><i>{{res.record.name}}</i></div>
+			<div>{{res.record.address}}</div>
+			<hr />
+		</div>
+	</div>
+</div>
