@@ -1,4 +1,10 @@
-import { Component, ElementRef, HostListener, OnInit } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild
+} from "@angular/core";
 import { User } from "../user";
 import { UserService } from "../user.service";
 
@@ -12,6 +18,8 @@ export class SearchComponent implements OnInit {
   results: any[] = [];
   highlighted = -1;
   isOpen = false;
+  numOfVisibleResults = 2;
+  @ViewChild("resultsDiv") resultsDiv: ElementRef;
 
   constructor(
     private userService: UserService,
@@ -30,10 +38,7 @@ export class SearchComponent implements OnInit {
     this.users = this.userService.getUsers();
   }
 
-  searchText(searchTerm, event) {
-    console.log(event.value);
-
-    console.log(`Searching for ${searchTerm}`);
+  searchText(searchTerm) {
     this.results = [];
     if (searchTerm === "") {
       return;
@@ -59,7 +64,7 @@ export class SearchComponent implements OnInit {
             });
           }
         } else {
-          if (user[key].find(u => u === searchTerm)) {
+          if (user[key].find(item => item.indexOf(searchTerm) !== -1)) {
             this.results.push({
               foundIn: key,
               record: highlightRecord
@@ -77,13 +82,28 @@ export class SearchComponent implements OnInit {
   highlightNext() {
     if (this.highlighted < this.results.length - 1) {
       this.highlighted++;
+      if (!this.isInView()) {
+        this.resultsDiv.nativeElement.scrollTop += 100;
+      }
     }
   }
 
   highlightPrev() {
     if (this.highlighted > 0) {
       this.highlighted--;
+      if (!this.isInView()) {
+        this.resultsDiv.nativeElement.scrollTop -= 100;
+      }
     }
+  }
+
+  isInView() {
+    const offset = Math.floor(this.resultsDiv.nativeElement.scrollTop / 100);
+    console.log(offset);
+    if (this.highlighted === offset || this.highlighted === offset + 1) {
+      return true;
+    }
+    return false;
   }
 
   unhighlight() {

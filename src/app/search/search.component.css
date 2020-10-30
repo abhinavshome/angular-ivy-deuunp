@@ -7,6 +7,15 @@
   width: 200px;
 }
 
+.result {
+  height: 100px;
+  border-bottom: 1px dotted gray;
+}
+
 .highlighted {
   background-color: yellow;
+}
+
+.small {
+  font-size: smaller;
 }

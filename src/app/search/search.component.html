@@ -1,18 +1,18 @@
-<input type="text" (keyup)="searchText(searchBox.value, $event)" (keyup.arrowup)="highlightPrev()" (keyup.arrowdown)="highlightNext()"
+<input type="text" (keyup)="searchText(searchBox.value)" (keyup.arrowup)="highlightPrev()" (keyup.arrowdown)="highlightNext()"
 (focus)="isOpen=true"
 #searchBox />
-<div class="results" id="results" *ngIf="isOpen">
+<div class="results" *ngIf="isOpen" #resultsDiv>
 	<div *ngIf="results.length === 0">
 		No results
 	</div>
 	<div *ngIf="results.length" (click)="searchBox.focus()">
 		<div *ngFor="let res of results; let i=index;" (mouseover)="highlight(i)" (mouseout)="unhighlight()"
-			[class.highlighted]="highlighted === i" class="result">
+			[class.highlighted]="highlighted === i" class="result" #res>
+			<div *ngIf="res.foundIn==='items'">"{{searchBox.value}}" found in items</div>
 			<div><b [innerHTML]="res.record.id"></b></div>
 			<div><i [innerHTML]="res.record.name"></i></div>
-			<div [innerHTML]="res.record.address"></div>
-			<div [innerHTML]="res.record.pincode"></div>
-			<hr />
+			<div class="small" [innerHTML]="res.record.address"></div>
+			<div class="small" [innerHTML]="res.record.pincode"></div>
 		</div>
 	</div>
 </div>
